@@ -5,6 +5,7 @@ import { get, post, del, notifyError } from '@/api/client'
 import PageHeader from '@/components/ui/PageHeader.vue'
 import SectionCard from '@/components/ui/SectionCard.vue'
 import ResponsiveDialog from '@/components/ui/ResponsiveDialog.vue'
+import CohortLeaderGrants from '@/components/admin/CohortLeaderGrants.vue'
 import { useAuthStore } from '@/stores/auth'
 import { loadAdminMe } from '@/api/adminUsers'
 const auth=useAuthStore()
@@ -36,6 +37,7 @@ function search(){page.value=1;void load()}
   <el-select v-model="schoolId" :disabled="saving" aria-label="当前管理学校" class="max-w-full !w-80"><el-option v-for="s in schools" :key="s.id" :value="s.id" :label="s.name" /></el-select>
   <el-empty v-if="!schools.length" description="暂无负责的学校，请联系平台管理员授权。" />
   <template v-else>
+   <CohortLeaderGrants v-if="canMembers && schoolId" :school-id="schoolId" />
    <el-radio-group v-model="tab" :disabled="saving" aria-label="管理内容"><el-radio-button v-if="canMembers" value="members">成员与班级</el-radio-button><el-radio-button v-if="canNotices" value="notices">校内公告</el-radio-button></el-radio-group>
    <SectionCard v-if="tab==='members'" title="成员与班级">
     <div class="flex flex-wrap gap-2 mb-4"><el-input v-model="query" aria-label="搜索成员" placeholder="姓名、用户名、学号或班级" class="!w-64" @keyup.enter="search" /><el-select v-model="status" aria-label="审核状态" placeholder="全部状态" class="!w-32" @change="search"><el-option label="全部状态" value=""/><el-option v-for="(v,k) in label" :key="k" :value="k" :label="v"/></el-select><el-button @click="search">查询</el-button></div>

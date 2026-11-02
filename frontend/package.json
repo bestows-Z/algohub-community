@@ -14,12 +14,13 @@
     "test:leetcode-script": "node scripts/test-leetcode-userscript.mjs",
     "test:announcement-editor": "node scripts/test-announcement-editor.mjs",
     "test:friend-actions": "node scripts/test-friend-actions.mjs",
-    "test:list-recovery": "node scripts/test-list-recovery.mjs",
+    "test:list-recovery": "node scripts/test-list-recovery.mjs && node scripts/test-cohort-management.mjs",
     "test:sync-view": "node scripts/test-sync-view.mjs",
     "shots": "node scripts/shots.mjs",
     "test:browser-sync": "node scripts/build-userscript-runtime.mjs --check && node scripts/test-browser-sync-runtime.mjs && node scripts/test-luogu-userscript.mjs && node scripts/test-qoj-userscript.mjs && node scripts/test-leetcode-userscript.mjs",
     "test:recent-accepted": "node scripts/test-recent-accepted.mjs",
-    "test:difficulty": "node scripts/test-difficulty.mjs"
+    "test:difficulty": "node scripts/test-difficulty.mjs",
+    "test:cohort-management": "node scripts/test-cohort-management.mjs"
   },
   "dependencies": {
     "@fontsource/jetbrains-mono": "^5.3.0",

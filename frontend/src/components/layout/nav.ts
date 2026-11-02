@@ -59,10 +59,11 @@ export const ADMIN_NAV_ITEMS: NavItem[] = [
   { path: '/settings', label: '设置与安全', short: '设置', icon: 'i-lucide-settings' }
 ]
 
-export function navGroupsForRole(isAdmin: boolean, isSchoolAdmin = false): NavGroup[] {
+export function navGroupsForRole(isAdmin: boolean, isSchoolAdmin = false, isCohortLeader = false): NavGroup[] {
   if (isAdmin) return [{ title: '', items: ADMIN_NAV_ITEMS }]
   const groups = NAV_GROUPS.filter((group) => !group.adminOnly)
-  return isSchoolAdmin ? [...groups, { title: '管理', items: [{ path: '/school-admin', label: '本校管理', short: '本校', icon: 'i-lucide-school' }] }] : groups
+  if (isSchoolAdmin) return [...groups, { title: '管理', items: [{ path: '/school-admin', label: '本校管理', short: '本校', icon: 'i-lucide-school' }] }]
+  return isCohortLeader ? [...groups, { title: '管理', items: [{ path: '/cohort-admin', label: '本届管理', short: '本届', icon: 'i-lucide-users-round' }] }] : groups
 }
 
 /** 当前页是否属于这个导航项（总览只认首页本身，其他的也认下一级路径） */

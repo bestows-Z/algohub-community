@@ -22,7 +22,8 @@ class RefreshPreparationTest {
         var identity = mock(IdentityMapper.class);
         var auth = spy(new AuthService(users, identity, mock(PasswordEncoder.class), mock(SchoolService.class),
                 jwt, tokens, new AppProperties(), mock(AuthRateLimit.class),
-                mock(com.szpu.algohub.admin.console.AdminUsers.class), mock(com.szpu.algohub.admin.console.AdminAccess.class)));
+                mock(com.szpu.algohub.admin.console.AdminUsers.class), mock(com.szpu.algohub.admin.console.AdminAccess.class),
+                mock(com.szpu.algohub.school.CohortLeaderMapper.class)));
         var user = new AppUser();
         user.setId(9L); user.setUsername("test"); user.setStatus("ACTIVE");
         when(tokens.refreshIdentity("old-cookie", "browser")).thenReturn(new TokenStore.RefreshIdentity(9L, ""));

@@ -55,6 +55,7 @@ const router = createRouter({
     { path: '/users/:userId', name: 'public-profile', component: () => import('@/views/PublicProfileView.vue'), meta: { title: '同学档案', mobileParent: '/ranking' } },
     { path: '/luogu-sync', name: 'luogu-sync', component: () => import('@/views/LuoguBrowserSyncView.vue'), meta: { title: '洛谷浏览器同步', mobileParent: '/accounts' } },
     { path: '/school-admin', name: 'school-admin', component: () => import('@/views/SchoolAdminView.vue'), meta: { title: '学校管理' } },
+    { path: '/cohort-admin', name: 'cohort-admin', component: () => import('@/views/CohortAdminView.vue'), meta: { title: '本届管理', mobileParent: '/me' } },
     { path: '/qoj-sync', name: 'qoj-sync', component: () => import('@/views/QojBrowserSyncView.vue'), meta: { title: 'QOJ 浏览器同步', mobileParent: '/accounts' } },
     { path: '/leetcode-sync', name: 'leetcode-sync', component: () => import('@/views/LeetCodeBrowserSyncView.vue'), meta: { title: '力扣浏览器同步', mobileParent: '/accounts' } },
     { path: '/ai-archive', name: 'ai-archive', component: () => import('@/views/AiArchiveView.vue'), meta: { title: '交给 AI 分析', mobileParent: '/profile' } },
@@ -232,6 +233,7 @@ router.beforeEach(async (to, from) => {
     return { path: '/' }
   }
   if (to.name === 'school-admin') return auth.isSchoolAdmin ? true : { path: '/' }
+  if (to.name === 'cohort-admin') return auth.isCohortLeader ? true : { path: '/' }
   if (auth.me?.profileCompletionRequired) return to.name === 'complete-academic-profile' ? true : { name: 'complete-academic-profile' }
   if (to.name === 'complete-academic-profile') return { path: '/' }
   if (!auth.me?.onboardingCompleted && to.name !== 'select-school' && to.name !== 'complete-profile') return { name: 'select-school' }

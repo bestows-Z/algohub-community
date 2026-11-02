@@ -80,6 +80,7 @@ npm run test:recent-accepted
 
 - [贡献指南](CONTRIBUTING.md) · [安全政策](SECURITY.md) · [社区准则](CODE_OF_CONDUCT.md)
 - [开发与配置](docs/local-development.md) · [架构与数据流](docs/architecture.md)
+- [年级负责人（队长）](docs/cohort-leaders.md)
 - [平台支持与排查](docs/platform-support.md) · [QOJ 浏览器同步](docs/qoj-browser-sync.md) · [力扣浏览器同步](docs/leetcode-browser-sync.md)
 - [生产部署参考](deploy/README.md)（贡献者不需要运行部署脚本）
 - [GitHub 设置清单](docs/github-settings.md) · [开源审查与验收](docs/open-source-readiness.md)

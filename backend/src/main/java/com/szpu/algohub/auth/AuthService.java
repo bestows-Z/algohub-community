@@ -34,6 +34,7 @@ import com.szpu.algohub.common.Redaction;
 import com.szpu.algohub.config.AppProperties;
 import com.szpu.algohub.school.SchoolMember;
 import com.szpu.algohub.school.SchoolService;
+import com.szpu.algohub.school.CohortLeaderMapper;
 
 /**
  * 身份与会话。登录返回短时效访问令牌（JWT），刷新令牌保存在 Redis 并通过 HttpOnly Cookie 下发。
@@ -54,11 +55,13 @@ public class AuthService {
     private final AuthRateLimit rateLimit;
     private final AdminUsers adminUsers;
     private final AdminAccess adminAccess;
+    private final CohortLeaderMapper cohortLeaders;
 
     public AuthService(AppUserMapper userMapper, IdentityMapper identityMapper,
                        PasswordEncoder passwordEncoder, SchoolService schoolService,
                        JwtService jwtService, TokenStore tokenStore, AppProperties properties, AuthRateLimit rateLimit,
-                       AdminUsers adminUsers, AdminAccess adminAccess) {
+                       AdminUsers adminUsers, AdminAccess adminAccess, CohortLeaderMapper cohortLeaders) {
+        this.cohortLeaders = cohortLeaders;
         this.rateLimit = rateLimit;
         this.userMapper = userMapper;
         this.identityMapper = identityMapper;
@@ -247,7 +250,7 @@ public class AuthService {
                 user.getRole(), user.getAvatarUrl(), user.getBio(), passwordEnabled(user),
                 user.getLastLoginAt(), user.getCreatedAt(), memberships, toView(privacy(userId)), bindings, userMapper.verifiedEmailCount(userId)>0, user.isOnboardingCompleted(),
                 academic.enrollmentYear(), academic.className(), academic.studentNo(),
-                "STUDENT".equals(user.getRole()) && user.isOnboardingCompleted() && !academic.complete(), user.isNicknameNeedsReview(), userMapper.managedSchools(userId));
+                "STUDENT".equals(user.getRole()) && user.isOnboardingCompleted() && !academic.complete(), user.isNicknameNeedsReview(), userMapper.managedSchools(userId), cohortLeaders.scopes(userId));
     }
 
     private static MembershipView toView(SchoolMember m) {
@@ -397,9 +400,15 @@ public class AuthService {
     public AppUser requireReadableProfile(Long targetUserId, Long viewerId, boolean viewerIsAdmin) {
         boolean schoolAccess = !viewerIsAdmin && viewerId != null && !targetUserId.equals(viewerId)
                 && userMapper.managesStudentProfile(viewerId, targetUserId);
-        AppUser user = requireVisibleProfile(targetUserId, viewerId, viewerIsAdmin || schoolAccess);
+        Map<String,Object> cohortScope = !viewerIsAdmin && !schoolAccess && viewerId != null && !targetUserId.equals(viewerId)
+                ? cohortLeaders.profileScope(viewerId, targetUserId) : null;
+        AppUser user = requireVisibleProfile(targetUserId, viewerId, viewerIsAdmin || schoolAccess || cohortScope != null);
         if (schoolAccess && !"PUBLIC".equals(privacy(targetUserId).getProfileVisibility())) {
             audit(viewerId, null, "SCHOOL_PRIVATE_PROFILE_VIEW", null, null, "targetUserId=" + targetUserId);
+        }
+        if (cohortScope != null && !"PUBLIC".equals(privacy(targetUserId).getProfileVisibility())) {
+            audit(viewerId, null, "COHORT_PRIVATE_PROFILE_VIEW", null, null, "targetUserId=" + targetUserId
+                    + ",schoolId=" + cohortScope.get("schoolId") + ",year=" + cohortScope.get("enrollmentYear"));
         }
         return user;
     }

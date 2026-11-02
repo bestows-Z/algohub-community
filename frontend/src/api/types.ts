@@ -35,6 +35,7 @@ export interface Me {
   email: string | null
   role: 'STUDENT' | 'ADMIN'
   managedSchools?: { id: number; name: string }[]
+  managedCohorts?: { schoolId: number; schoolName: string; enrollmentYear: number }[]
   avatarUrl: string | null
   bio: string | null
   hasPassword: boolean

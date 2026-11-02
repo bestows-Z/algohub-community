@@ -13,7 +13,7 @@ const router = useRouter()
 const auth = useAuthStore()
 const accounts = useAccounts(!auth.isAdmin)
 
-const groups = computed(() => navGroupsForRole(auth.isAdmin, auth.isSchoolAdmin))
+const groups = computed(() => navGroupsForRole(auth.isAdmin, auth.isSchoolAdmin, auth.isCohortLeader))
 </script>
 
 <template>

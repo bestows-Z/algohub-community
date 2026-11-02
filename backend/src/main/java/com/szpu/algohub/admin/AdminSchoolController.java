@@ -64,7 +64,7 @@ public class AdminSchoolController {
     @Transactional
     public ApiResult<Void> delete(@PathVariable Long id) {
         if (db.queryForList("select id from school where id=? for update", id).isEmpty()) throw ApiException.notFound("学校不存在");
-        for (String table : List.of("school_member", "problem_list", "training_activity", "announcement", "school_administrator")) {
+        for (String table : List.of("school_member", "problem_list", "training_activity", "announcement", "school_administrator", "school_cohort_leader")) {
             if (db.queryForObject("select count(*) from " + table + " where school_id=?", Long.class, id) > 0)
                 throw ApiException.conflict("学校已有成员、教学数据、公告或管理员授权，不能删除；可以停用邀请码");
         }

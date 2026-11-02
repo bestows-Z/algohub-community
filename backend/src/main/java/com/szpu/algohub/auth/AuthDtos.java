@@ -75,7 +75,8 @@ public final class AuthDtos {
                          Instant createdAt, List<MembershipView> memberships, PrivacyView privacy,
                          List<OauthBindingView> bindings, boolean emailVerified, boolean onboardingCompleted,
                          Integer enrollmentYear, String className, String studentNo,
-                         boolean profileCompletionRequired, boolean nicknameNeedsReview, List<java.util.Map<String,Object>> managedSchools) {
+                         boolean profileCompletionRequired, boolean nicknameNeedsReview, List<java.util.Map<String,Object>> managedSchools,
+                         List<java.util.Map<String,Object>> managedCohorts) {
     }
 
     /** 登录结果。刷新令牌通过 HttpOnly Cookie 下发，不出现在响应体里。 */

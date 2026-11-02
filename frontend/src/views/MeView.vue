@@ -107,6 +107,7 @@ const groups = computed(() => {
     list.push({ title: '管理', rows: [{ label: '管理后台', icon: 'i-lucide-shield', tone: 'brand', to: '/admin' }] })
   }
   if (auth.isSchoolAdmin || auth.isAdmin) list.push({title:'学校管理',rows:[{label:'学校管理',sub:'成员审核、班级与校内公告',icon:'i-lucide-school',tone:'brand',to:'/school-admin'}]})
+  if (auth.isCohortLeader) list.push({title:'年级管理',rows:[{label:'本届管理',sub:'负责年级的成员审核与资料维护',icon:'i-lucide-users-round',tone:'brand',to:'/cohort-admin'}]})
   return list
 })
 

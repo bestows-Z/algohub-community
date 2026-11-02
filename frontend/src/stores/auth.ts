@@ -19,6 +19,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   const isLoggedIn = computed(() => me.value !== null)
   const isSchoolAdmin = computed(() => !!me.value?.managedSchools?.length)
+  const isCohortLeader = computed(() => !isSchoolAdmin.value && me.value?.role === 'STUDENT' && !!me.value?.managedCohorts?.length)
   const isAdmin = computed(() => me.value?.role === 'ADMIN')
   const approvedMembership = computed(
     () => me.value?.memberships.find((m) => m.status === 'APPROVED') ?? null
@@ -177,6 +178,7 @@ export const useAuthStore = defineStore('auth', () => {
     isLoggedIn,
     isAdmin,
     isSchoolAdmin,
+    isCohortLeader,
     approvedMembership,
     apply,
     clear,

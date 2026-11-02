@@ -37,6 +37,7 @@ const subtitle = computed(() => {
   const membership = auth.approvedMembership
   if (me.role === 'ADMIN') return membership?.className ? `平台管理员 · ${membership.className}` : '平台管理员'
   if (auth.isSchoolAdmin) return '学校管理员'
+  if (auth.isCohortLeader) return '年级负责人'
   if (membership) {
     const year = membership.enrollmentYear ? `${membership.enrollmentYear} 级` : null
     return [year, membership.className ?? membership.schoolName].filter(Boolean).join(' · ')
@@ -83,6 +84,7 @@ function onCommand(command: string) {
           <div class="text-xs text-muted">{{ subtitle }}</div>
         </li>
         <el-dropdown-item v-if="auth.isSchoolAdmin || auth.isAdmin" command="/school-admin">学校管理</el-dropdown-item>
+        <el-dropdown-item v-if="auth.isCohortLeader" command="/cohort-admin">本届管理</el-dropdown-item>
         <el-dropdown-item command="/settings" :divided="compact">
           <span class="i-lucide-settings mr-2.5 text-base" aria-hidden="true" />设置与安全
         </el-dropdown-item>
