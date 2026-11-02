@@ -20,6 +20,7 @@ import static org.mockito.Mockito.*;
 @Transactional
 class ProblemRatingRefreshTest {
     @Autowired JdbcTemplate jdbc;
+    @Autowired NowcoderWriteTransactions writes;
     @Autowired ProblemMapper problems;
     @Autowired ProblemService problemService;
     @Autowired SubmissionMapper submissions;
@@ -44,7 +45,7 @@ class ProblemRatingRefreshTest {
         var registry = mock(PlatformRegistry.class);
         var adapter = mock(PlatformAdapter.class);
         when(registry.require(platform)).thenReturn(adapter);
-        var service = new ProblemCatalogService(registry, problems, jdbc);
+        var service = new ProblemCatalogService(registry, problems, jdbc, writes);
         for (int rating : new int[]{1600, 1800}) {
             String label = platform == Platform.CODEFORCES ? "CF " + rating
                     : platform == Platform.ATCODER ? "AtCoder Problems 估计 " + rating : String.valueOf(rating);

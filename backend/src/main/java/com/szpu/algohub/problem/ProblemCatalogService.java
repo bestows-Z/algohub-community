@@ -32,9 +32,11 @@ public class ProblemCatalogService {
     private final PlatformRegistry registry;
     private final ProblemMapper problemMapper;
     private final JdbcTemplate jdbcTemplate;
+    private final NowcoderWriteTransactions writes;
 
     public ProblemCatalogService(PlatformRegistry registry, ProblemMapper problemMapper,
-                                 JdbcTemplate jdbcTemplate) {
+                                 JdbcTemplate jdbcTemplate, NowcoderWriteTransactions writes) {
+        this.writes = writes;
         this.registry = registry;
         this.problemMapper = problemMapper;
         this.jdbcTemplate = jdbcTemplate;
@@ -57,10 +59,11 @@ public class ProblemCatalogService {
         int written = 0;
         for (int i = 0; i < catalog.size(); i += BATCH) {
             List<CatalogProblem> chunk = catalog.subList(i, Math.min(i + BATCH, catalog.size()));
-            save.accept(() -> {
+            save.accept(() -> writes.execute(platform.name(), () -> {
                 upsertChunk(platform, chunk);
                 insertTags(platform, chunk);
-            });
+                return null;
+            }));
             written += chunk.size();
         }
         int tags = catalog.stream().mapToInt(item -> item.problem().tags() == null ? 0 :

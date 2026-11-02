@@ -22,7 +22,8 @@ public class NowcoderTrackerController {
     @jakarta.annotation.PreDestroy public void close(){worker.shutdownNow();}
     private final IdentityLookupGuard lookupGuard;
     private final AuthService authService;
-    public NowcoderTrackerController(PlatformAccountMapper accounts, PlatformHttpClient http, org.springframework.jdbc.core.JdbcTemplate jdbc, org.springframework.transaction.support.TransactionTemplate tx, IdentityLookupGuard lookupGuard, AuthService authService) { this.accounts=accounts; this.http=http; this.jdbc=jdbc;this.tx=tx;this.lookupGuard=lookupGuard;this.authService=authService; }
+    private final com.szpu.algohub.problem.NowcoderWriteTransactions writes;
+    public NowcoderTrackerController(PlatformAccountMapper accounts, PlatformHttpClient http, org.springframework.jdbc.core.JdbcTemplate jdbc, org.springframework.transaction.support.TransactionTemplate tx, IdentityLookupGuard lookupGuard, AuthService authService, com.szpu.algohub.problem.NowcoderWriteTransactions writes) { this.writes=writes; this.accounts=accounts; this.http=http; this.jdbc=jdbc;this.tx=tx;this.lookupGuard=lookupGuard;this.authService=authService; }
     public record Problem(String pid, String title, String url, String difficulty) {}
     public record Page(List<Problem> accepted, int page, int totalContests, int scannedQuestions, boolean hasMore) {}
     @PostMapping("/sync")
@@ -104,7 +105,7 @@ public class NowcoderTrackerController {
     }
     /** 按 {@link NowcoderTrackerMapping} 合并：同题（题号与标题都一致）只记一次，题号撞了但标题不同的另记。 */
     void mergeCachedSolved() {
-        tx.executeWithoutResult(status -> {
+        writes.execute("NOWCODER", () -> {
             jdbc.update(NowcoderTrackerMapping.MAPPED + """
                 insert into problem(platform,problem_key,title,url,difficulty_raw,difficulty_label,difficulty_value,difficulty_source,tags_complete)
                 select distinct on (m.problem_key) 'NOWCODER',m.problem_key,m.title,m.url,
@@ -135,6 +136,7 @@ public class NowcoderTrackerController {
                   and not exists(select 1 from mapped m join problem p on p.platform='NOWCODER' and p.problem_key=m.problem_key where m.account_id=s.account_id and p.id=s.problem_id)
                   and not exists(select 1 from submission sub where sub.account_id=s.account_id and sub.problem_id=s.problem_id and sub.accepted)
                 """);
+            return null;
         });
     }
     private void syncPractice(PlatformAccount account) throws Exception {

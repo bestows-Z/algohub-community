@@ -26,7 +26,8 @@ class LuoguPublicSyncTest {
             null, submissions, null, mock(DailyStatMapper.class), snapshots, tasks, cursors,
             mock(PlatformThrottleMapper.class), dataStatus,
             mock(com.szpu.algohub.statistics.ContestParticipationMapper.class), null, null, null, avatars,
-            mock(PlatformTransactionManager.class));
+            mock(PlatformTransactionManager.class),
+            new com.szpu.algohub.problem.NowcoderWriteTransactions(null, mock(PlatformTransactionManager.class)));
     private final SyncTask task = new SyncTask();
 
     LuoguPublicSyncTest() {
@@ -83,7 +84,8 @@ class LuoguPublicSyncTest {
                 null, submissions, null, mock(DailyStatMapper.class), snapshots, tasks, cursors,
                 mock(PlatformThrottleMapper.class), dataStatus,
                 mock(com.szpu.algohub.statistics.ContestParticipationMapper.class), null, null, null, failing,
-                mock(PlatformTransactionManager.class));
+                mock(PlatformTransactionManager.class),
+            new com.szpu.algohub.problem.NowcoderWriteTransactions(null, mock(PlatformTransactionManager.class)));
         when(adapter.fetchTotals(any())).thenThrow(new ApiException(ErrorKind.RATE_LIMITED, "rate limited"));
         failingService.execute(task);
         verifyNoInteractions(failing);
