@@ -7,6 +7,7 @@ import { useAuthStore } from '@/stores/auth'
 import PageHeader from '@/components/ui/PageHeader.vue'
 import SectionCard from '@/components/ui/SectionCard.vue'
 import ResponsiveDialog from '@/components/ui/ResponsiveDialog.vue'
+import ReportManagement from '@/components/weeklyreport/ReportManagement.vue'
 
 const auth = useAuthStore()
 const scopes = ref<CohortScope[]>([])
@@ -130,6 +131,7 @@ async function save() {
       </div>
       <el-pagination v-model:current-page="page" :disabled="saving" :page-size="50" :total="total" layout="prev, pager, next" class="mt-4" @current-change="load" />
     </SectionCard>
+    <ReportManagement v-if="current" :key="scopeKey(current)" :scope="{schoolId:current.schoolId,enrollmentYear:current.enrollmentYear}" />
     <ResponsiveDialog :model-value="!!editing" title="修改本届成员资料" @update:model-value="value => { if (!value && !saving) editing = null }">
       <el-form v-if="editing" label-position="top" @submit.prevent="save">
         <p class="mt-0 text-sm text-muted">只修改班级和学号。年级调整请联系学校管理员。</p>

@@ -39,6 +39,7 @@ export const NAV_GROUPS: NavGroup[] = [
       { path: '/friends', label: '关注与好友', short: '好友', icon: 'i-lucide-users-round' },
       { path: '/messages', label: '消息', short: '消息', icon: 'i-lucide-mail' },
       { path: '/reminders', label: '目标与提醒', short: '提醒', icon: 'i-lucide-bell' },
+      { path: '/weekly-reports', label: '我的周报', short: '周报', icon: 'i-lucide-notebook-pen' },
       { path: '/contests', label: '比赛日历', short: '比赛', icon: 'i-lucide-calendar' },
       { path: '/settings', label: '设置与安全', short: '设置', icon: 'i-lucide-settings' }
     ]

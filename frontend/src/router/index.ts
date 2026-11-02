@@ -153,6 +153,12 @@ const router = createRouter({
       meta: { title: '消息', mobileParent: '/me' }
     },
     {
+      path: '/weekly-reports',
+      name: 'weekly-reports',
+      component: () => import('@/views/WeeklyReportsView.vue'),
+      meta: { title: '我的周报', mobileParent: '/me' }
+    },
+    {
       path: '/reminders',
       name: 'reminders',
       component: () => import('@/views/RemindersView.vue'),
@@ -244,7 +250,7 @@ router.beforeEach(async (to, from) => {
   }
   if (to.name === 'home' && !auth.approvedMembership && auth.me?.onboardingCompleted) return { name: 'ranking' }
   // 未入校的用户也能绑定 OJ 账号、使用总榜和设置；校内功能仍需先加入学校。
-  const withoutSchool = ['messages', 'friends', 'reminders', 'public-profile', 'announcements', 'ranking', 'accounts', 'accounts-sync-log', 'luogu-sync', 'qoj-sync', 'leetcode-sync', 'settings', 'profile', 'me', 'complete-profile']
+  const withoutSchool = ['messages', 'friends', 'reminders', 'weekly-reports', 'public-profile', 'announcements', 'ranking', 'accounts', 'accounts-sync-log', 'luogu-sync', 'qoj-sync', 'leetcode-sync', 'settings', 'profile', 'me', 'complete-profile']
   if (!auth.approvedMembership && to.name !== 'select-school' && !withoutSchool.includes(String(to.name))) return { name: 'select-school' }
   // 已入校但还没走完引导（先申请、管理员先批了）的同学要留在引导里，否则和上面「没完成引导就去选学校」来回跳转卡死页面
   if (auth.approvedMembership && auth.me?.onboardingCompleted && to.name === 'select-school') return { path: '/' }

@@ -92,6 +92,7 @@ const groups = computed(() => {
         { label: '公告与资源', sub: '学校通知和常用学习资源', icon: 'i-lucide-megaphone', tone: 'warning', to: '/announcements' },
         { label: '公开动态', sub: '同学们最近通过的题', icon: 'i-lucide-activity', tone: 'success', to: '/activity' },
         { label: '目标与提醒', sub: '学习进度、持续计划与提醒设置', icon: 'i-lucide-bell', tone: 'brand', to: '/reminders' },
+        { label: '我的周报', sub: '提交学习总结、查看负责人评价', icon: 'i-lucide-notebook-pen', tone: 'brand', to: '/weekly-reports' },
         { label: '比赛日历', sub: nextContest.value, icon: 'i-lucide-calendar', tone: 'info', to: '/contests' }
       ]
     },

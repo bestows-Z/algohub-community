@@ -62,6 +62,7 @@ public class StudyReminderJobs {
             var rows=jdbc.queryForList("""
                 with picked as (
                     select notification_id from study_mail_outbox where attempts<5 and
+                    not exists(select 1 from weekly_report_reminder wr where wr.notification_id=study_mail_outbox.notification_id) and
                     ((status='PENDING' and available_at<=now()) or (status='SENDING' and lease_until<now()))
                     order by available_at for update skip locked limit 1
                 ) update study_mail_outbox o set status='SENDING',attempts=attempts+1,

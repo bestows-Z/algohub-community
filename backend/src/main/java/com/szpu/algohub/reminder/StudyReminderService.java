@@ -78,6 +78,7 @@ public class StudyReminderService {
     @Transactional
     public Map<String,Object> save(long userId,PersonalRequest request) {
         validate(request.weekly(),false);validate(request.monthly(),false);
+        lockActiveUser(userId);
         settings(userId);
         jdbc.update("""
             insert into study_goal_setting(user_id,personal_weekly,personal_monthly,email_enabled) values(?,?,?,?)

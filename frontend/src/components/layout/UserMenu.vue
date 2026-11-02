@@ -85,6 +85,7 @@ function onCommand(command: string) {
         </li>
         <el-dropdown-item v-if="auth.isSchoolAdmin || auth.isAdmin" command="/school-admin">学校管理</el-dropdown-item>
         <el-dropdown-item v-if="auth.isCohortLeader" command="/cohort-admin">本届管理</el-dropdown-item>
+        <el-dropdown-item v-if="!auth.isAdmin" command="/weekly-reports">我的周报</el-dropdown-item>
         <el-dropdown-item command="/settings" :divided="compact">
           <span class="i-lucide-settings mr-2.5 text-base" aria-hidden="true" />设置与安全
         </el-dropdown-item>
