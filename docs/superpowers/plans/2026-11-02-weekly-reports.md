@@ -71,4 +71,6 @@ Files: `docs/weekly-reports.md`, README and synthetic screenshots.
 - [x] Request independent read-only code review per requesting-code-review skill; fix material findings and add focused regression coverage.
 - [x] Run complete backend verify against disposable database; full frontend checks; real browser student/manager/cohort, deadline/disable flows with synthetic data only. Result:752 tests, zero failures/errors,2 source-network skips; frontend and real scheduled browser flow passed.
 - [x] Document migration, consent/privacy, config effective dates, retry/snapshot semantics and actual test evidence.
-- [ ] Review staged diff, run Gitleaks, commit/push branch; create authorized Issue and PR with tested results/screenshots and issue-closing link. Verify remote head and CI status; do not merge.
+- [x] Review staged diff, run Gitleaks, commit/push branch; create authorized Issue and PR with tested results/screenshots and issue-closing link. Verified Issue #15 and PR #16, ready for review against upstream main; GitHub checks running, secrets/dependencies already passed. No merge or deployment.
+
+Published: https://github.com/longtiandragon/algohub-community/issues/15 and https://github.com/longtiandragon/algohub-community/pull/16.

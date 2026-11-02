@@ -2,6 +2,8 @@
 
 学生从侧栏或手机“我的 → 我的周报”进入。学校管理员从“学校管理 → 周报管理”进入；年级负责人在“本届管理”查看授权年级的周报。现有自动“每周学习报告”仍是刷题汇总，不代表学生已提交周报。
 
+功能讨论：[Issue #15](https://github.com/longtiandragon/algohub-community/issues/15)；代码审查：[PR #16](https://github.com/longtiandragon/algohub-community/pull/16)。
+
 ## 填写与评价
 
 - 时间统一为北京时间自然周，周一至周日，以周一日期标识周次。
