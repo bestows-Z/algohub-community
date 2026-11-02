@@ -86,6 +86,7 @@ public class SyncService {
     private final AppProperties properties;
     private final AvatarService avatars;
     private final TransactionTemplate tx;
+    private final com.szpu.algohub.problem.NowcoderWriteTransactions writes;
 
     public SyncService(PlatformRegistry registry, PlatformAccountMapper accountMapper,
                        PlatformCredentialMapper credentialMapper, CredentialCipher cipher,
@@ -96,7 +97,9 @@ public class SyncService {
                        AccountDataStatusMapper dataStatusMapper, ContestParticipationMapper contestMapper,
                        ContestService contestService, ProblemCatalogService catalogService,
                        AppProperties properties, AvatarService avatars,
-                       PlatformTransactionManager transactionManager) {
+                       PlatformTransactionManager transactionManager,
+                       com.szpu.algohub.problem.NowcoderWriteTransactions writes) {
+        this.writes = writes;
         this.registry = registry;
         this.accountMapper = accountMapper;
         this.credentialMapper = credentialMapper;
@@ -577,7 +580,7 @@ public class SyncService {
      * 然后在同一个事务里执行写入。任何一项不符都整批回滚。
      */
     private <T> T fenced(SyncTask task, PlatformAccount account, Supplier<T> work) {
-        return tx.execute(status -> {
+        return writes.execute(task.getPlatform(), () -> {
             if (account != null) {
                 PlatformAccount current = accountMapper.lockForSync(account.getId());
                 if (current == null) {
