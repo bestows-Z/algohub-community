@@ -54,7 +54,9 @@ class WeeklyReportTest {
         member(school,leader,2026);member(school,student,2026);member(school,older,2025);member(otherSchool,foreign,2026);
         db.update("insert into school_administrator(user_id,school_id) values (?,?)",manager,school);
         leaders.grant(manager,school,leader,2026);
-        base=Instant.now().plusSeconds(5);week=ReportTime.week(base);at(base);
+        // PostgreSQL timestamps have microsecond precision. Linux clocks may supply nanoseconds;
+        // rounding a persisted reminder upward must not make this synthetic exact-time call early.
+        base=Instant.now().plusSeconds(5).truncatedTo(java.time.temporal.ChronoUnit.MICROS);week=ReportTime.week(base);at(base);
         when(mail.createMimeMessage()).thenAnswer(i->new MimeMessage(Session.getInstance(new Properties())));
     }
     void at(Instant now) {when(clock.now()).thenReturn(now);}
@@ -66,7 +68,9 @@ class WeeklyReportTest {
     long cycle() {
         enable();
         db.update("delete from weekly_report_cycle where school_id=?",school);
-        return db.queryForObject("insert into weekly_report_cycle(school_id,week_start,cutoff_at,remind_at,email_enabled) values (?,?,?,?,true) returning id",Long.class,school,week,ReportTime.sql(base.plusSeconds(600)),ReportTime.sql(base.plusSeconds(100)));
+        long id=db.queryForObject("insert into weekly_report_cycle(school_id,week_start,cutoff_at,remind_at,email_enabled) values (?,?,?,?,true) returning id",Long.class,school,week,ReportTime.sql(base.plusSeconds(600)),ReportTime.sql(base.plusSeconds(100)));
+        assertThat(ReportTime.instant(db.queryForObject("select remind_at from weekly_report_cycle where id=?",java.sql.Timestamp.class,id))).isEqualTo(base.plusSeconds(100));
+        return id;
     }
     @Test void draftSubmitReviewReturnAndResubmitPreserveVersions() {
         var draft=save(student,null,0,"draft only",false);assertThat(draft.get("status")).isEqualTo("DRAFT");
